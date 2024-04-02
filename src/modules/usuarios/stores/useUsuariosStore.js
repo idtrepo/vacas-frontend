@@ -7,7 +7,7 @@ export default defineStore('usuarios', () => {
     const usuarios = ref([]);
     const hayUsuarios = computed(() => usuarios.value.length > 0);
 
-    const asignarUsuarios = ({ data: dataUsuarios }) => {
+    const asignarUsuarios = (dataUsuarios) => {
         usuarios.value = dataUsuarios;
 
         console.log('listado de usuarios');
@@ -18,6 +18,9 @@ export default defineStore('usuarios', () => {
         try{
             const res = await usuariosService.obtenerElementos(params);
             const data = await res.data;
+
+            console.log('listado de usuarios');
+            console.log(data);
 
             asignarUsuarios(data);
             return data;
