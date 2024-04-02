@@ -1,0 +1,1 @@
+export const interceptorAuthError = err => err;
