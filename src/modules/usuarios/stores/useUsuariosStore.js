@@ -1,28 +1,27 @@
 import { ref, computed, toValue, unref } from 'vue'
 import { defineStore } from 'pinia'
 import usuariosService from '../services/usuariosService';
+import useRequest from '@/modules/global/composables/request/useRequest';
+
 
 export default defineStore('usuarios', () => {
+    //Dependencias
+    const request = useRequest(usuariosService);
+
+
     //Obtener listado de usuarios
     const usuarios = ref([]);
     const hayUsuarios = computed(() => usuarios.value.length > 0);
 
     const asignarUsuarios = (dataUsuarios) => {
         usuarios.value = dataUsuarios;
-
-        console.log('listado de usuarios');
-        console.log(usuarios.value);
     }
 
     const obtenerUsuarios = async(params=null) => {
         try{
-            const res = await usuariosService.obtenerElementos(params);
-            const data = await res.data;
-
-            console.log('listado de usuarios');
-            console.log(data);
-
+            const data = await request.obtenerElementos(params, true);
             asignarUsuarios(data);
+
             return data;
         }catch(error){
             console.error(error);
@@ -35,16 +34,12 @@ export default defineStore('usuarios', () => {
 
 
     //Crear usuario
-    const nuevoUsuario = ref(true);
-
-    const crearNuevoUsuario = () => {
-        nuevoUsuario.value = true;
-        reiniciarInfoUsuario();
-    }
-
-    const crearUsuario = async(data) => {
+    const crearUsuario = async(dataUsuario) => {
+        console.log('creando usuario desde el store');
         try{
-            const res = await usuariosService.crearElemento(unref(data));
+            const data = await request.crearElemento(unref(dataUsuario), true);
+
+            return data;
         }catch(error){
             console.error(error);
             throw error;
@@ -52,25 +47,27 @@ export default defineStore('usuarios', () => {
     }
 
 
-    //Obtener info usuario 
+    //Editar usuario
     const infoUsuario = ref(null);
+    const editar = computed(() => infoUsuario.value?.id ?? null);
+
+    const editarUsuario = async(id, dataUsuario) => {
+        try{
+            const data = await request.editarElemento(id, unref(dataUsuario), true);
+
+            reiniciarInfoUsuario();
+            return data;
+        }catch(error){
+            throw error;
+        }
+    }
 
     const reiniciarInfoUsuario = () => {
         infoUsuario.value = null;
     }
 
     const asignarInfoUsuario = (dataUsuario) => {
-        nuevoUsuario.value = false;
         infoUsuario.value = dataUsuario;
-    }
-
-    const editarUsuario = async(id, data) => {
-        try{
-            const res = await usuariosService.editarElemento(id, unref(data));
-            return res;
-        }catch(error){
-            throw error;
-        }
     }
 
     return {
@@ -78,11 +75,11 @@ export default defineStore('usuarios', () => {
         hayUsuarios,
         obtenerUsuarios,
 
-        nuevoUsuario,
-        crearNuevoUsuario,
         crearUsuario,
 
+        editar,
         infoUsuario,
+        reiniciarInfoUsuario,
         asignarInfoUsuario,
         editarUsuario,
     }

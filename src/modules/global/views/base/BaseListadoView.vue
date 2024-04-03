@@ -12,7 +12,7 @@ import { onMounted } from 'vue'
                 </h2>
             </article>
             <article class="col-span-3">
-                <slot name="boton-nuevo"></slot>
+                <slot name="elemento"></slot>
             </article>
         </header>
         <section class="w-full h-full grid grid-cols-12">

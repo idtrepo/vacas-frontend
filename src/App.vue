@@ -52,6 +52,6 @@ onMounted(() => {
     </template>
   </MainView>
 
-  <!-- <Loader/> -->
+  <Loader/>
   <Toast/>
 </template>

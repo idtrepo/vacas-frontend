@@ -1,25 +1,20 @@
 <script setup>
 //Propiedades
-const { elemento } = defineProps({
+const { elemento, asignarInfo } = defineProps({
     elemento: {
         type: Object,
         required: true
+    },
+    asignarInfo: {
+        type: Function,
+        required: true
     }
 });
-
-
-//Eventos personalizados
-const emit = defineEmits(['seleccionar']);
-
-
-const seleccionarElemento = () => {
-    emit('seleccionar', elemento);
-}
 </script>
 
 <template>
-    <article class="w-full h-28 relative justify-between shadow-sm">
-        <header @click="seleccionarElemento" class="absolute w-full h-2/3 p-4 z-10 flex items-center bg-cyan-700 hover:bg-cyan-600 hover:cursor-pointer transition-all duration-200 rounded-md shadow-sm shadow-black/30">
+    <article @click="() => asignarInfo(elemento)" class="w-full h-28 relative justify-between shadow-sm">
+        <header class="absolute w-full h-2/3 p-4 z-10 flex items-center bg-cyan-700 hover:bg-cyan-600 hover:cursor-pointer transition-all duration-200 rounded-md shadow-sm shadow-black/30">
             <section class="text-4xl mr-4 text-gray-100">
                 <slot name="icono"></slot>
             </section>

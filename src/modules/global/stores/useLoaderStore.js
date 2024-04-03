@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 
 export default defineStore('loader', () => {
-    const cargando = ref(false);
+    const cargando = ref(true);
     
     const establecerEstadoCargando = (estado) => {
         cargando.value = estado;

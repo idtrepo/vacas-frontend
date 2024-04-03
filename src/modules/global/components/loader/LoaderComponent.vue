@@ -1,15 +1,14 @@
 <script setup>
-import { storeToRefs } from 'pinia'
-import useLoaderStore from '../../stores/useLoaderStore';
+import useRequest from '../../composables/request/useRequest';
 
 
 //Dependencias
-const loaderStore = useLoaderStore();
-const { cargando } = storeToRefs(loaderStore);
+const request = useRequest();
+const { estatus } = request;
 </script>
 
 <template>
-    <div v-if="cargando" class="fixed left-0 top-0 h-screen w-screen flex justify-center items-center bg-slate-950/40">
+    <div v-if="estatus" class="fixed left-0 top-0 h-screen w-screen flex justify-center items-center bg-slate-950/30 z-50">
       <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
 </template>

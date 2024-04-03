@@ -15,29 +15,15 @@ import { DURACION_MENSAJE_TOAST } from '@/modules/global/helpers/constantes';
 //Dependencias 
 const toast = useToast();
 const usuariosStore = useUsuariosStore();
-const { infoUsuario } = storeToRefs(usuariosStore);
-
-
-//Propiedades
-const props = defineProps({
-  editar: {
-    type: Object,
-    default: () => null
-  }
-});
-const { editar } = toRefs(props);
-
-
-//Eventos personalizados
-const emit = defineEmits(['reiniciar']);
+const { infoUsuario, editar } = storeToRefs(usuariosStore);
 
 
 //Editar usuarios
 const editarPassword = ref(false);
 const esEdicion = computed(() => editar.value !== null);
 
-const asignarDatosUsuarioEditar = (dataUsuario) => {
-  const { nombre, apellido, id, correo } = dataUsuario;
+const asignarDatosUsuarioEditar = () => {
+  const { nombre, apellido, id, correo } = infoUsuario.value;
   usuario.value.id = id;
   usuario.value.nombre = nombre;
   usuario.value.apellido = apellido;
@@ -46,7 +32,7 @@ const asignarDatosUsuarioEditar = (dataUsuario) => {
 
 watch(editar, newValue => {
   if(newValue !== null){
-    asignarDatosUsuarioEditar(newValue);
+    asignarDatosUsuarioEditar();
   }else{
     reiniciarValoresUsuario();
   }
@@ -60,14 +46,12 @@ const editarUsuario = async() => {
     const res = await usuariosStore.editarUsuario(id, usuario);
     reiniciarValoresUsuario();
     usuariosStore.obtenerUsuarios();
-    usuariosStore.crearNuevoUsuario();
     toast.add({
       severity: 'success',
       summary: 'Usuario editado',
       detail: 'El usuario se ha editado exitosamente',
       life: DURACION_MENSAJE_TOAST
     });
-    emit('reiniciar', null);
   }catch(error){
     console.error(error);
     toast.add({
@@ -190,10 +174,10 @@ const crearUsuario = async() => {
         <p class="uppercase">¿Editar contraseña?</p>
         <InputSwitch v-model="editarPassword"/>
       </article>
-      <article>
+      <!-- <article>
         <p class="uppercase">perfil</p>
         <Dropdown :options="perfiles" option-label="name" class="w-full"/>
-      </article>
+      </article> -->
       <section v-if="!esEdicion || (esEdicion && editarPassword)">
         <article class="mb-3">
           <p class="uppercase">contraseña</p>

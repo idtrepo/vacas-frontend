@@ -25,6 +25,6 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(authGuard);
+// router.beforeEach(authGuard);
 
 export default router

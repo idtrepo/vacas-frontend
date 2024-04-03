@@ -7,14 +7,16 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
+import ConfirmDialog from 'primevue/confirmdialog';
 import useUsuariosStore from '../stores/useUsuariosStore';
 import { DURACION_MENSAJE_TOAST } from '@/modules/global/helpers/constantes';
+import Button from 'primevue/button';
 
 
 //Dependencias
 const toast = useToast();
 const usuariosStore = useUsuariosStore();
-const { usuarios, hayUsuarios, nuevoUsuario } = storeToRefs(usuariosStore);
+const { usuarios } = storeToRefs(usuariosStore);
 
 
 //Componentes
@@ -34,20 +36,6 @@ const obtenerUsuarios = async() => {
 onMounted(() => {
   obtenerUsuarios();
 })
-
-
-//Editar usuario
-const usuarioEditar = ref(null);
-
-const reiniciarUsuarioEditar = () => {
-  usuarioEditar.value = null;
-  obtenerUsuarios();
-}
-
-const seleeccionarUsuario = (usuarioSeleccionado) => {
-  console.log(usuarioSeleccionado);
-  usuarioEditar.value = usuarioSeleccionado;
-}
 </script>
 
 <template>
@@ -56,12 +44,15 @@ const seleeccionarUsuario = (usuarioSeleccionado) => {
       <span class="text-emerald-900 text-3xl uppercase font-bold mr-2">usuarios</span>
       <i class="fa-solid fa-user text-2xl text-emerald-900"></i>
     </template>
+    <template #elemento>
+      <Button @click="usuariosStore.reiniciarInfoUsuario" label="nuevo" severity="info" class="w-full uppercase"/>
+    </template>
     <template #listado>
       <CartaUsuario
-        @seleccionar="seleeccionarUsuario"
         v-for="usuario in usuarios"
         :key="usuario.id"
-        :elemento="usuario">
+        :elemento="usuario"
+        :asignar-info="usuariosStore.asignarInfoUsuario">
         <template #icono>
           <i class="fa-solid fa-user"></i>
         </template>
@@ -71,14 +62,16 @@ const seleeccionarUsuario = (usuarioSeleccionado) => {
         <template #segundo-texto>
           {{ usuario.apellido }}
         </template>
+        <template #tercer-texto>
+          {{ usuario.correo }}
+        </template>
       </CartaUsuario>
     </template>
     <template #formulario>
-      <UsuarioForm 
-        :editar="usuarioEditar"
-        @reiniciar="reiniciarUsuarioEditar"/>
+      <UsuarioForm />
     </template>
   </BaseListado>
   
+  <ConfirmDialog/>
   <Toast/>
 </template>
