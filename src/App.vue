@@ -43,15 +43,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <MainView>
-    <template #nav>
+  <main class="main">
+    <aside class="aside">
       <Nav :rutas="rutas"/>
-    </template>
-    <template #contenido>
+    </aside>
+    <section class="contenido">
       <RouterView/>
-    </template>
-  </MainView>
+    </section>
+  </main>
 
   <Loader/>
   <Toast/>
 </template>
+
+<style scoped>
+.main{
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  width: 100vw;
+  height: 100vh;
+}
+
+.aside{
+  grid-column: 1 / 2;
+}
+
+.contenido{
+  grid-column: 2 / 13;
+}
+</style>
