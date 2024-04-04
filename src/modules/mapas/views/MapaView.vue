@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import Dropdown from 'primevue/dropdown';
 import useVacasStore from '@/modules/perfiles/stores/useVacasStore';
@@ -66,6 +66,11 @@ onMounted(() => {
     crearMapa();
     obtenerVacas();
 });
+
+onUnmounted(() => {
+    clearInterval(refUbicacion.value);
+    vacasStore.reiniciarDatosUbicacion();
+})
 </script>
 
 <template>
