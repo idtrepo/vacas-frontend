@@ -12,6 +12,7 @@ export default defineStore('usuarios', () => {
     //Obtener listado de usuarios
     const usuarios = ref([]);
     const hayUsuarios = computed(() => usuarios.value.length > 0);
+    const mostrarPaginacion = computed(() => usuarios.value.length >= 5);
 
     const asignarUsuarios = (dataUsuarios) => {
         usuarios.value = dataUsuarios;
@@ -34,6 +35,13 @@ export default defineStore('usuarios', () => {
 
 
     //Crear usuario
+    const nuevoUsuario = ref(false);
+
+    const crearNuevoUsuario = () => {
+        nuevoUsuario.value = true;
+        reiniciarInfoUsuario();
+    }
+
     const crearUsuario = async(dataUsuario) => {
         console.log('creando usuario desde el store');
         try{
@@ -49,7 +57,7 @@ export default defineStore('usuarios', () => {
 
     //Editar usuario
     const infoUsuario = ref(null);
-    const editar = computed(() => infoUsuario.value?.id ?? null);
+    const editarDatosUsuario = computed(() => infoUsuario.value?.id ?? null);
 
     const editarUsuario = async(id, dataUsuario) => {
         try{
@@ -67,18 +75,23 @@ export default defineStore('usuarios', () => {
     }
 
     const asignarInfoUsuario = (dataUsuario) => {
+        console.log('datos del usuario')
+        console.log(dataUsuario);
         infoUsuario.value = dataUsuario;
     }
 
     return {
         usuarios,
         hayUsuarios,
+        mostrarPaginacion,
         obtenerUsuarios,
 
+        nuevoUsuario,
+        crearNuevoUsuario,
         crearUsuario,
 
-        editar,
         infoUsuario,
+        editarDatosUsuario,
         reiniciarInfoUsuario,
         asignarInfoUsuario,
         editarUsuario,
