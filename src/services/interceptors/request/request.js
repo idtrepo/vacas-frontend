@@ -1,6 +1,5 @@
 import { storeToRefs } from 'pinia'
 import axios from 'axios';
-import {jwtDecode} from "jwt-decode";
 import useAuthStore from "@/modules/auth/stores/useAuthStore.js";
 
 
@@ -10,24 +9,29 @@ const recurso = 'autenticacion/actualizar'
 export const interceptorAuthRequest = async(request) => {
     //Dependencias
     const authStore = useAuthStore();
-    const { accessToken, refreshToken, sesionVigente } = storeToRefs(authStore);
+    const { access, refresh, sesionVigente, expiracionTokenAccess } = storeToRefs(authStore);
 
     //Aun no se ha autenticado el usuario
     if(!sesionVigente.value) return request;
 
     //El usuario ya esta autenticado
-    const tokenDecodificado = jwtDecode(accessToken.value);
-    const tiempoExpiracion = new Date(tokenDecodificado.exp * 1000).getTime();
+    const tiempoExpiracion = new Date(expiracionTokenAccess.value).getTime();
     const tiempoActual = Date.now();
 
     //Ha caducado el token del usuario
     if(tiempoActual > tiempoExpiracion){
-        const { access } = (await axios.post(`${baseURL}${recurso}`, {
-            refresh: refreshToken.value
+        console.log('caduco la sesion, se debe actualizar')
+        const { access:accessToken } = (await axios.post(`${baseURL}${recurso}`, {
+            refresh: refresh.value
         })).data;
+
+        console.log('TOKEN ACCES NUEVO: ', accessToken);
+        authStore.asignarTokenAccess(accessToken);
     }
 
-    request.headers['Authorization'] = `Bearer ${accessToken.value}`;
+    console.log('TOKEN ACCESS: ', access.value);
+
+    request.headers['Authorization'] = `Bearer ${access.value}`;
 
     return request;
 }

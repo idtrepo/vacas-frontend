@@ -1,1 +1,0 @@
-export const DURACION_MENSAJE_TOAST = 5000;

@@ -3,6 +3,7 @@ import { interceptorAuthRequest } from '@/services/interceptors/request/request.
 import { interceptorAuthError } from '@/services/interceptors/request/error.js'
 
 const baseURL = import.meta.env.VITE_BASE_URL;
+console.log(baseURL);
 
 const servicio = axios.create({
     baseURL,
