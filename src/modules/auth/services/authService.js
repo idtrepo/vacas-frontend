@@ -4,10 +4,10 @@ const recurso = 'autenticacion';
 
 
 export default {
-    iniciarSesion(data){
+    iniciarSesion({ data }){
         return servicio.post(`${recurso}/login`, data);
     },
-    renovarSesion(refreshToken){
+    renovarSesion({ refreshToken }){
         return servicio.post(`${recurso}/actualizar`, {
             refresh: refreshToken
         });
